@@ -2,7 +2,7 @@
 
 from setuptools import setup, find_packages
 
-__version__ = '1.0.0'
+__version__ = '1.0.1'
 
 with open('README.md', 'r', encoding='utf-8') as readme:
     long_description = readme.read()
@@ -17,9 +17,9 @@ setup(
     long_description=long_description,
     long_description_content_type='text/markdown',
     install_requires=[
-        'google-api-python-client>=1.12.8',
-        'google-auth-httplib2>=0.0.4',
-        'google-auth-oauthlib>=0.4.2'
+        'google-api-python-client==1.12.8',
+        'google-auth-httplib2==0.0.4',
+        'google-auth-oauthlib==0.4.2'
     ],
     url='https://github.com/mine-your-business/myb-google-sheets-api',
     python_requires='>=3.7',
