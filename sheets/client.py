@@ -1,13 +1,10 @@
 from __future__ import print_function
-import pickle
-import os.path
 from googleapiclient.discovery import build
-from google_auth_oauthlib.flow import InstalledAppFlow
-from google.auth.transport.requests import Request
 from google.oauth2 import service_account
 
 READ_WRITE_SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 # READ_ONLY_SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
+
 
 class SheetsApi:
 
@@ -18,7 +15,7 @@ class SheetsApi:
 
     def _get_credentials(self, credentials_json):
         creds = service_account.Credentials.from_service_account_info(
-            credentials_json, 
+            credentials_json,
             scopes=READ_WRITE_SCOPES
         )
 
