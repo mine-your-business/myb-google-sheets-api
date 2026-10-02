@@ -1,0 +1,15 @@
+{
+  "include_values_in_response": false,
+  "data": [
+    {
+      "dataFilter": {
+        "a1Range": "Balances!A4:C4"
+      },
+      "majorDimension": "ROWS",
+      "values": [
+        ["2021-06-03", "BTC", "0.02"]
+      ]
+    }
+  ],
+  "value_input_option": "USER_ENTERED"
+}

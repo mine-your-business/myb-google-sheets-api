@@ -1,0 +1,9 @@
+{
+  "value_render_option": "FORMATTED_VALUE",
+  "data_filters": [
+    {
+      "a1Range": "Balances!A1:C3"
+    }
+  ],
+  "date_time_render_option": "SERIAL_NUMBER"
+}

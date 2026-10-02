@@ -1,42 +1,109 @@
 # myb-google-sheets-api
- An API client for the Google Sheets API
+
+A small Python client for reading from and writing to Google Sheets with a service account, built on
+[`google-auth`](https://pypi.org/project/google-auth/) and
+[`google-api-python-client`](https://pypi.org/project/google-api-python-client/).
+
+Requires Python 3.11 or newer.
 
 ## Installation
 
-The package is availble via PyPi and can be installed with the following command:
 ```
-pip3 install myb-google-sheets-api
+pip install myb-google-sheets-api
 ```
 
-To install it from the repo, clone the repo and cd into the directory:
+To install from source:
 
 ```
 git clone https://github.com/mine-your-business/myb-google-sheets-api.git
 cd myb-google-sheets-api
+pip install .
 ```
 
-You can install this library with `pip`:
+## Usage
+
+`SheetsApi` takes the parsed contents of a service account JSON key. The service account needs edit access to the
+spreadsheet (share the sheet with its `client_email`). The client requests the
+`https://www.googleapis.com/auth/spreadsheets` scope.
+
+```python
+import json
+
+from sheets import SheetsApi
+
+with open('service-account.json') as f:
+    api = SheetsApi(json.load(f))
+
+spreadsheet_id = '1AbCdEfGhIjKlMnOpQrStUvWxYz0123456789abcdEFG'
+
+# read_from_sheet takes a DataFilter and returns the response's valueRanges list
+# (an empty list when nothing matches).
+value_ranges = api.read_from_sheet(spreadsheet_id, {'a1Range': 'Balances!A1:C3'})
+rows = value_ranges[0]['valueRange'].get('values', []) if value_ranges else []
+
+# write_to_sheet takes a DataFilterValueRange and returns the full batchUpdateByDataFilter response.
+# Values are entered as if typed by a user (USER_ENTERED).
+api.write_to_sheet(
+    spreadsheet_id,
+    {
+        'dataFilter': {'a1Range': 'Balances!A4:C4'},
+        'majorDimension': 'ROWS',
+        'values': [['2021-06-03', 'BTC', '0.02']],
+    },
+)
+```
+
+API errors are raised as `googleapiclient.errors.HttpError`. The `write_to_sheet` response is logged at `DEBUG`
+level on the `sheets.client` logger.
+
+See the Sheets API reference for
+[`DataFilter`](https://developers.google.com/sheets/api/reference/rest/v4/DataFilter) and
+[`DataFilterValueRange`](https://developers.google.com/sheets/api/reference/rest/v4/DataFilterValueRange).
+
+## Development
 
 ```
-pip3 install .
+python -m venv .venv
+. .venv/bin/activate
+pip install -e '.[dev]'
+ruff check .
+ruff format --check .
+pytest -v
 ```
 
-## Testing
+The unit tests run offline: HTTP is served from JSON fixtures in [`tests/fixtures`](tests/fixtures), and the
+google-auth service account flow is exercised with a key generated at test time.
 
-To run tests, simply run the following command:
+[`tests/test_live.py`](tests/test_live.py) reads from a real spreadsheet and is skipped unless both of these are set:
 
-```
-pytest --verbose
-```
+| Variable | Meaning |
+| --- | --- |
+| `GOOGLE_SHEETS_CREDENTIALS` | Path to a service account JSON key file |
+| `GOOGLE_SHEETS_SPREADSHEET_ID` | A spreadsheet shared with that service account |
+| `GOOGLE_SHEETS_RANGE` | Optional A1 range to read; defaults to `A1:A1` |
+
+CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) runs lint, the tests on Python 3.11 to 3.14 plus a run
+against the minimum supported dependency versions, and a package build check.
 
 ## Releases
 
-Releases should follow a [Semantic Versioning](https://semver.org/) scheme. 
+Versions follow [Semantic Versioning](https://semver.org/). The version is set in
+[`pyproject.toml`](pyproject.toml).
 
-When changes have been made that warrant a new release that should be published, modify the `__version__` in [`setup.py`](setup.py) 
+To release, merge the version bump to `main`, then [draft a new release](https://github.com/mine-your-business/myb-google-sheets-api/releases)
+with a tag such as `v1.1.0` targeting `main`. Publishing the release runs
+[`.github/workflows/python-publish.yml`](.github/workflows/python-publish.yml), which builds the package and uploads
+it to [PyPI](https://pypi.org/project/myb-google-sheets-api/) using
+[trusted publishing](https://docs.pypi.org/trusted-publishers/). No API token is stored in GitHub; the PyPI project
+must have this repository and workflow (environment `pypi`) registered as a trusted publisher.
 
-After the change is merged to the `main` branch, go to [releases](https://github.com/mine-your-business/myb-google-sheets-api/releases) and `Draft a new release`. The `Tag version` should follow the pattern `v1.0.0` and should `Target` the `main` branch. 
+## Changelog
 
-The `Release title` should not include the `v` from the tag and should have a reasonably detailed description of the new release's changes. 
+### 1.1.0
 
-Once the release has been published, the [`.github/workflows/python-publish.yml`](.github/workflows/python-publish.yml) GitHub Actions Workflow should trigger and automatically upload the new version to [PyPi](https://pypi.org/) using GitHub secrets credentials stored with the [Mine Your Business GitHub Organization](https://github.com/mine-your-business).
+- Requires Python 3.11 or newer (previously 3.7). Python 3.10 reaches end of life on 2026-10-04.
+- Dependencies are now ranges instead of exact pins: `google-api-python-client>=2.181.0,<3` and
+  `google-auth>=2.41.0,<3`. `google-auth-oauthlib` is no longer a dependency (it was never imported), and
+  `google-auth-httplib2` is no longer pinned directly (it comes in through `google-api-python-client`).
+- `write_to_sheet` no longer prints its response to stdout; it logs it at `DEBUG` on the `sheets.client` logger.
+- The `SheetsApi` interface is unchanged.
