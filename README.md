@@ -4,7 +4,7 @@ A small Python client for reading from and writing to Google Sheets with a servi
 [`google-auth`](https://pypi.org/project/google-auth/) and
 [`google-api-python-client`](https://pypi.org/project/google-api-python-client/).
 
-Requires Python 3.10 or newer.
+Requires Python 3.11 or newer.
 
 ## Installation
 
@@ -82,7 +82,7 @@ google-auth service account flow is exercised with a key generated at test time.
 | `GOOGLE_SHEETS_SPREADSHEET_ID` | A spreadsheet shared with that service account |
 | `GOOGLE_SHEETS_RANGE` | Optional A1 range to read; defaults to `A1:A1` |
 
-CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) runs lint, the tests on Python 3.10 to 3.13 plus a run
+CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) runs lint, the tests on Python 3.11 to 3.14 plus a run
 against the minimum supported dependency versions, and a package build check.
 
 ## Releases
@@ -101,7 +101,7 @@ must have this repository and workflow (environment `pypi`) registered as a trus
 
 ### 1.1.0
 
-- Requires Python 3.10 or newer (previously 3.7).
+- Requires Python 3.11 or newer (previously 3.7). Python 3.10 reaches end of life on 2026-10-04.
 - Dependencies are now ranges instead of exact pins: `google-api-python-client>=2.181.0,<3` and
   `google-auth>=2.41.0,<3`. `google-auth-oauthlib` is no longer a dependency (it was never imported), and
   `google-auth-httplib2` is no longer pinned directly (it comes in through `google-api-python-client`).
