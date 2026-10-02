@@ -33,7 +33,7 @@ classifiers = [
 dev = [
     "cryptography>=42",
     "pytest>=8",
-    "ruff>=0.13",
+    "ruff==0.16.10",  # pinned so lint results match CI; bumped by Dependabot
 ]
 
 [project.urls]
