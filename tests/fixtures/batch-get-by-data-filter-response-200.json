@@ -1,0 +1,21 @@
+{
+  "spreadsheetId": "1AbCdEfGhIjKlMnOpQrStUvWxYz0123456789abcdEFG",
+  "valueRanges": [
+    {
+      "valueRange": {
+        "range": "Balances!A1:C3",
+        "majorDimension": "ROWS",
+        "values": [
+          ["Date", "Currency", "Balance"],
+          ["2021-06-01", "BTC", "0.01234567"],
+          ["2021-06-02", "ETH", "1.5"]
+        ]
+      },
+      "dataFilters": [
+        {
+          "a1Range": "Balances!A1:C3"
+        }
+      ]
+    }
+  ]
+}

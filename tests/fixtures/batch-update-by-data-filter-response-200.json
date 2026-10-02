@@ -1,0 +1,19 @@
+{
+  "spreadsheetId": "1AbCdEfGhIjKlMnOpQrStUvWxYz0123456789abcdEFG",
+  "totalUpdatedRows": 1,
+  "totalUpdatedColumns": 3,
+  "totalUpdatedCells": 3,
+  "totalUpdatedSheets": 1,
+  "responses": [
+    {
+      "spreadsheetId": "1AbCdEfGhIjKlMnOpQrStUvWxYz0123456789abcdEFG",
+      "updatedRange": "Balances!A4:C4",
+      "updatedRows": 1,
+      "updatedColumns": 3,
+      "updatedCells": 3,
+      "dataFilter": {
+        "a1Range": "Balances!A4:C4"
+      }
+    }
+  ]
+}
